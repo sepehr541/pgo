@@ -436,6 +436,17 @@ object PGo {
           val specFile = config.TraceGenCmd.specFile()
           val destDir = config.TraceGenCmd.destDir()
 
+          val logFiles = os
+            .list(config.TraceGenCmd.logsDir())
+            .filter(os.isFile)
+            .filter(_.last.endsWith(".log"))
+
+          if logFiles.size == 0
+          then
+            throw IllegalArgumentException(
+              "No log files found, TraceLink should be run from specific trace directory",
+            )
+
           val (tlaModule, mpcalBlock) = parseMPCal(specFile)
           val traceConf = tracing
             .InferFromMPCal(
@@ -448,10 +459,6 @@ object PGo {
             .withPhysicalClocks(physicalClocks =
               config.TraceGenCmd.physicalClocks(),
             )
-          val logFiles = os
-            .list(config.TraceGenCmd.logsDir())
-            .filter(os.isFile)
-            .filter(_.last.endsWith(".log"))
 
           // utility: copy spec over
           os.copy.over(from = specFile, to = destDir / specFile.last)
