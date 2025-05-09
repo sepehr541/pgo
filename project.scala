@@ -23,5 +23,5 @@
 //> using test.dependency "com.github.daddykotex::courier:3.2.0"
 //> using test.dependency "com.lihaoyi::mainargs:0.7.6"
 //> using test.dependency "com.lihaoyi::pprint:0.9.0"
-//> using test.dependency org.scalameta::munit::1.1.0
+//> using test.dependency org.scalameta::munit::1.1.1
 //> using test.dependency org.scalameta::munit-scalacheck:1.1.0

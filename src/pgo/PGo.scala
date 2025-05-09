@@ -124,6 +124,13 @@ object PGo {
         descr = "directory containing log files to use",
         default = Some(destDir()),
       )
+      validate(logsDir): logsDir =>
+        if os.list(logsDir).filter(_.last.endsWith(".log")).isEmpty
+        then
+          Left(
+            s"$logsDir has no .log files - you need to pass a folder formatted as if harvest-traces generated it",
+          )
+        else Right(())
       val cfgFragmentSuffix = opt[String](
         descr =
           "suffix to add to {model_name}Validate{suffix}.cfg, when looking for a manual config file",
@@ -440,12 +447,6 @@ object PGo {
             .list(config.TraceGenCmd.logsDir())
             .filter(os.isFile)
             .filter(_.last.endsWith(".log"))
-
-          if logFiles.size == 0
-          then
-            throw IllegalArgumentException(
-              "No log files found, TraceLink should be run from specific trace directory",
-            )
 
           val (tlaModule, mpcalBlock) = parseMPCal(specFile)
           val traceConf = tracing
